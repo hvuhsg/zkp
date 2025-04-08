@@ -83,5 +83,5 @@ func getColorFromNodeValue(nodeValue string) (string, error) {
 	if len(parts) != 2 {
 		return "", fmt.Errorf("invalid node value: %s", nodeValue)
 	}
-	return parts[1], nil
+	return parts[0], nil
 }

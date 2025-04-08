@@ -17,6 +17,13 @@ func NewColoringGraph() *ColoringGraph {
 	}
 }
 
+func (cg *ColoringGraph) Clone() *ColoringGraph {
+	return &ColoringGraph{
+		Graph:  cg.Graph.Clone(),
+		Colors: cg.Colors,
+	}
+}
+
 func (cg *ColoringGraph) IsGraphColoringValid() bool {
 	for _, node := range cg.GetNodes() {
 		if _, ok := cg.Colors[string(node.Value)]; !ok {

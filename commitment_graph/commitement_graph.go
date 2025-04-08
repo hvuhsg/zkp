@@ -26,6 +26,7 @@ type CommitmentGraph struct {
 }
 
 func NewCommitmentGraph(cg *coloringgraph.ColoringGraph) *CommitmentGraph {
+	cg = cg.Clone()
 	cg.ShuffleColors()
 
 	nodesValues := make([]string, len(cg.GetNodes()))

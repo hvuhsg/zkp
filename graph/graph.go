@@ -9,7 +9,7 @@ type NodeValue interface {
 }
 
 type Graph[T NodeValue] struct {
-	nodes []Node[T]
+	nodes []*Node[T]
 	edges []Edge
 }
 
@@ -26,21 +26,39 @@ type Edge struct {
 
 func NewGraph[T NodeValue]() *Graph[T] {
 	return &Graph[T]{
-		nodes: make([]Node[T], 0),
+		nodes: make([]*Node[T], 0),
 		edges: make([]Edge, 0),
+	}
+}
+
+func (g *Graph[T]) Clone() *Graph[T] {
+	newNodes := make([]*Node[T], len(g.nodes))
+	for i, node := range g.nodes {
+		newNodes[i] = &Node[T]{
+			Id:    node.Id,
+			Value: node.Value,
+		}
+	}
+
+	newEdges := make([]Edge, len(g.edges))
+	copy(newEdges, g.edges)
+
+	return &Graph[T]{
+		nodes: newNodes,
+		edges: newEdges,
 	}
 }
 
 func (g *Graph[T]) AddNode(value T) {
 	id := uint16(len(g.nodes))
-	g.nodes = append(g.nodes, Node[T]{Id: id, Value: value})
+	g.nodes = append(g.nodes, &Node[T]{Id: id, Value: value})
 }
 
 func (g *Graph[T]) AddEdge(from, to int) {
 	g.edges = append(g.edges, Edge{From: from, To: to})
 }
 
-func (g *Graph[T]) GetNodes() []Node[T] {
+func (g *Graph[T]) GetNodes() []*Node[T] {
 	return g.nodes
 }
 

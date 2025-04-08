@@ -195,14 +195,14 @@ func DeserializeGraph[T NodeValue](data []byte, valueDeserializer func([]byte) (
 
 	// Deserialize nodes
 	nodesData := data[5 : 5+nodesSize]
-	nodes := make([]Node[T], 0)
+	nodes := make([]*Node[T], 0)
 	offset := 0
 	for offset < len(nodesData) {
 		node, totalSize, err := DeserializeNode(nodesData[offset:], valueDeserializer)
 		if err != nil {
 			return nil, fmt.Errorf("failed to deserialize node: %w", err)
 		}
-		nodes = append(nodes, *node)
+		nodes = append(nodes, node)
 		offset += int(totalSize)
 	}
 
