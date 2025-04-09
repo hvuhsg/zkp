@@ -2,7 +2,6 @@ package zkp
 
 import (
 	"crypto/sha1"
-	"math/big"
 
 	coloringgraph "github.com/hvuhsg/zkp/coloring_graph"
 	commitmentgraph "github.com/hvuhsg/zkp/commitment_graph"
@@ -42,8 +41,10 @@ func (p *Proofer) CreateProof(length int) *Proof {
 		commitementGraphs[i] = cg
 	}
 
-	edgeNonce := hashModMaxUint64(commitementGraphsPayloads[len(commitementGraphsPayloads)-1].Hash())
+	newRandomizer := NewRandomizerFromCommitments(commitementGraphsPayloads)
+
 	for i, cg := range commitementGraphs {
+		edgeNonce := newRandomizer.Uint64()
 		edges := cg.GetEdges()
 
 		edgeId := edgeNonce % uint64(len(edges))
@@ -53,7 +54,6 @@ func (p *Proofer) CreateProof(length int) *Proof {
 
 		edgeValues[i] = [2]string{nodev1, nodev2}
 		edgeIds[i] = edgeId
-		edgeNonce = hashModMaxUint64(commitementGraphsPayloads[i].Hash()) + edgeNonce
 	}
 
 	return &Proof{
@@ -61,13 +61,4 @@ func (p *Proofer) CreateProof(length int) *Proof {
 		edgeValues:        edgeValues,
 		edgeIds:           edgeIds,
 	}
-}
-
-// HashModMaxUint64 takes a 20-byte array and returns the value modulo max uint64
-func hashModMaxUint64(hash [20]byte) uint64 {
-	// Convert the full 20-byte hash to a big integer
-	hashInt := new(big.Int).SetBytes(hash[:])
-
-	// Convert result to uint64 and return
-	return hashInt.Uint64()
 }

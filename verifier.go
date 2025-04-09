@@ -21,11 +21,12 @@ func (p *Proof) Verify() bool {
 		}
 	}
 
-	// Compute the first edge nonce from the last commitment graph hash
-	edgeNonce := hashModMaxUint64(p.commitementGraphs[len(p.commitementGraphs)-1].Hash())
+	randomizer := NewRandomizerFromCommitments(p.commitementGraphs)
 
 	// Verify the proof
 	for i, g := range graphs {
+		edgeNonce := randomizer.Uint64()
+
 		// Verify edge values are not the same
 		if !isEdgeValuesValid(p.edgeValues[i]) {
 			return false
@@ -52,8 +53,6 @@ func (p *Proof) Verify() bool {
 		if string(node1.Value) != edgeValue1HashString || string(node2.Value) != edgeValue2HashString {
 			return false
 		}
-
-		edgeNonce = hashModMaxUint64(p.commitementGraphs[i].Hash()) + edgeNonce
 	}
 	return true
 }
