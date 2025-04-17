@@ -1,5 +1,7 @@
 # Zero-Knowledge Proof Implementation
 
+[![Go Tests](https://github.com/hvuhsg/zkp/actions/workflows/go-tests.yml/badge.svg)](https://github.com/hvuhsg/zkp/actions/workflows/go-tests.yml)
+
 This project implements a zero-knowledge proof system for graph coloring problems using Go. It provides a way to prove knowledge of a valid graph coloring without revealing the actual coloring solution.
 
 ## Overview
